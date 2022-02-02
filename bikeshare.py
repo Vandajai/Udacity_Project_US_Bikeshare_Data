@@ -21,7 +21,7 @@ def get_filters():
 
 
     while True:
-      city = input("\nWhich City you want to choose? Chicago/New York City/Washingtone?\n")
+      city = input("\nWhich City you want to choose? Chicago/New York City/Washingtone?\n").title()
       if city not in ('New York City', 'Chicago', 'Washington'):
         print("Invalid input.Pls try again.")
         continue
@@ -31,7 +31,7 @@ def get_filters():
     # TO DO: get user input for month (all, january, february, ... , june)
 
     while True:
-      month = input("\nWhich month you want to choose? January/February/March/April/May/June or type 'all' if no preference?\n")
+      month = input("\nWhich month you want to choose? January/February/March/April/May/June or type 'all' if no preference?\n").title()
       if month not in ('January', 'February', 'March', 'April', 'May', 'June', 'all'):
         print("Invalid input.Pls try again.")
         continue
@@ -41,7 +41,7 @@ def get_filters():
     # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
 
     while True:
-      day = input("\nWhich day you want to choose? Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday or 'all' if no preference.\n")
+      day = input("\nWhich day you want to choose? Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday or 'all' if no preference.\n").title()
       if day not in ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'all'):
         print("Invalid input.Pls try again.")
         continue
@@ -206,7 +206,7 @@ def user_stats(df):
     #print(user_types)
     print('User Types:\n', user_types)
 
-    # TO DO: Display counts of gender
+    # TO DO: Display counts of gender    
 
     try:
       gender_types = df['Gender'].value_counts()
@@ -214,8 +214,8 @@ def user_stats(df):
     except KeyError:
       print("\nGender Types:\nNo data available for this month.")
 
-    # TO DO: Display earliest, most recent, and most common year of birth
-
+    # TO DO: Display earliest, most recent, and most common year of birth    
+    
     try:
       Earliest_Year = df['Birth Year'].min()
       print('\nEarliest Year:', Earliest_Year)
@@ -234,9 +234,36 @@ def user_stats(df):
     except KeyError:
       print("\nMost Common Year:\nNo data available for this month.")
 
-    print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-'*40)
+      print("\nThis took %s seconds." % (time.time() - start_time))
+      print('-'*40)
+        
+def display_raw_data(df):
+    """
+    Asks if the user would like to see displays 5 lines, then asks if they would like to see 5 more.
+    Continues asking until they say no.
+    """
+    show_rows = 5
+    rows_start = 0
+    rows_end= show_rows-1
 
+    print('\nWould you like to view 5 rows of individual trip data? Enter yes or no?')
+    while True:
+        raw_data = input('      (yes or no):  ')
+        if raw_data.lower() == 'yes':
+            # display show_rows number of lines, but display to user as starting from row as 1
+            # e.g. if rows_start = 0 and rows_end = 4, display to user as "rows 1 to 5"
+            print('\n    Displaying rows {} to {}:'.format(rows_start+1, rows_end+1))
+
+            print('\n', df.iloc[rows_start : rows_end + 1])
+            rows_start += show_rows
+            rows_end += show_rows
+
+            print('\n    Would you like to see the next {} rows?'.format(show_rows))
+            continue
+        else:
+            break  
+          
+      
 
 def main():
     while True:
@@ -247,6 +274,7 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
+        display_raw_data(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
